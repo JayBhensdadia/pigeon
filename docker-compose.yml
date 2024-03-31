@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    container_name: pigeon-postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
+    networks:
+      - pigeon-network
+  
+
+  backend:
+    container_name: pigeon-server
+    build: ./server
+    ports:
+      - 8888:8888
+    environment:
+      - DATABASE_URL=postgresql://postgres:mysecretpassword@postgres:5432/postgres
+      - PORT=8888
+      - JWT_SECRET=Jay@123
+    networks:
+      - pigeon-network
+    depends_on:
+      - postgres
+
+  frontend:
+    container_name: pigeon-client
+    build: ./client
+    ports:
+      - 5173:5173
+    depends_on:
+      - backend
+    networks:
+      - pigeon-network
+
+networks:
+  pigeon-network:
