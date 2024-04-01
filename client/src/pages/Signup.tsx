@@ -165,7 +165,7 @@ const Signup = () => {
           </form>
         </Form>
         <img
-          src="../../public/signin.svg"
+          src="../../public/signup.svg"
           className="hidden md:block max-w-[500px] "
         />
       </div>
