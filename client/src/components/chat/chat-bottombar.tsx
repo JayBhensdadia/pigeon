@@ -21,12 +21,17 @@ const ChatBottombar = ({ sendMessage, isMobile }: ChatBottombarProps) => {
 
   const handleSend = () => {
     message.trim();
+    if (message.length == 0) return;
+    const rand = String(Math.random());
     const msg: Message = {
-      id: "msg1",
+      id: rand,
       chatId: "chat1",
       content: message,
       sender: "userid1",
     };
+    // console.log("inside send message calll");
+    // console.log(msg);
+
     sendMessage(msg);
     setMessage("");
     if (inputRef.current) {

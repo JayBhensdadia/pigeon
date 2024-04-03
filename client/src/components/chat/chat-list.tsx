@@ -1,25 +1,16 @@
 import { cn } from "@/lib/utils";
-import { Message, userData } from "@/tempdata";
+import { Message, userData, Chat } from "@/tempdata";
 import React, { useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ChatBottombar from "./chat-bottombar";
 
 interface ChatListProps {
-  messages?: Message[];
-  name: string;
-  avatar: string;
-  sendMessage: (msg: Message) => void;
+  chat: Chat;
   isMobile: boolean;
 }
 
 const currentUserid = "userid1";
-const ChatList = ({
-  messages,
-  name,
-  avatar,
-  sendMessage,
-  isMobile,
-}: ChatListProps) => {
+const ChatList = ({ chat, isMobile }: ChatListProps) => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -27,30 +18,32 @@ const ChatList = ({
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [chat]);
   return (
-    <div className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col">
+    <div className="w-full overflow-x-hidden h-full flex flex-col">
       <div
         ref={messagesContainerRef}
-        className="w-full overflow-y-auto overflow-x-hidden h-full flex flex-col"
+        className="w-full overflow-y-scroll overflow-x-hidden h-full flex flex-col gap-1"
       >
-        {messages?.map((message, index) => {
+        {chat.messages?.map((message, index) => {
           return (
             <div
+              key={message.id}
               className={cn(
-                "flex flex-col gap-2 p-4 whitespace-pre-wrap",
-                message.sender !== currentUserid ? "items-end" : "items-start"
+                "flex flex-col gap-2 px-4 whitespace-pre-wrap",
+                message.sender == currentUserid ? "items-end" : "items-start"
               )}
             >
-              <div className="flex gap-3 items-center">
+              <span className=" bg-accent p-3 rounded-md max-w-xs">
+                {message.content}
+              </span>
+              {/* <div className="flex gap-3 items-center">
                 <Avatar className="cursor-pointer">
-                  <AvatarImage src={avatar} />
-                  <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+                  <AvatarImage src={"avatar"} />
+                  <AvatarFallback>{chat.name.charAt(0)}</AvatarFallback>
                 </Avatar>
-                <span className=" bg-accent p-3 rounded-md max-w-xs">
-                  {message.content}
-                </span>
-              </div>
+                
+              </div> */}
             </div>
           );
         })}
